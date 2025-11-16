@@ -163,3 +163,4 @@ Dependencies/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
+Secrets.xcconfig
