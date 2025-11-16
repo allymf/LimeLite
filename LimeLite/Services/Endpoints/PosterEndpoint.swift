@@ -1,3 +1,5 @@
+import Foundation
+
 enum PosterEndpoint: EndpointProtocol {
     var url: URL? { nil }
     
