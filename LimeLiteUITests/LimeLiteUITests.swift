@@ -1,10 +1,3 @@
-//
-//  LimeLiteUITests.swift
-//  LimeLiteUITests
-//
-//  Created by Alysson Moreira on 29/10/25.
-//
-
 import XCTest
 
 final class LimeLiteUITests: XCTestCase {

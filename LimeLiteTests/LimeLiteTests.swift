@@ -1,10 +1,3 @@
-//
-//  LimeLiteTests.swift
-//  LimeLiteTests
-//
-//  Created by Alysson Moreira on 29/10/25.
-//
-
 import XCTest
 @testable import LimeLite
 
