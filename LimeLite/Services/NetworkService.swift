@@ -1,8 +1,8 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func performRequest<T: Decodable>(for endpoint: Endpoint) async throws -> T
-    func performRequest(for endpoint: Endpoint) async throws -> Data
+    func request<T: Decodable>(for endpoint: Endpoint) async throws -> T
+    func requestData(for endpoint: Endpoint) async throws -> Data
 }
 
 final class NetworkService: NetworkServiceProtocol {
@@ -13,7 +13,7 @@ final class NetworkService: NetworkServiceProtocol {
     
     init(
         urlSession: URLSession = URLSession.shared,
-        urlRequestFactory: URLRequestFactoryProtocol,
+        urlRequestFactory: URLRequestFactoryProtocol = URLRequestFactory(),
         decoder: JSONDecoder = JSONDecoder()
     ) {
         self.urlSession = urlSession
@@ -21,7 +21,7 @@ final class NetworkService: NetworkServiceProtocol {
         self.decoder = decoder
     }
     
-    func performRequest(for endpoint: Endpoint) async throws -> Data {
+    func requestData(for endpoint: Endpoint) async throws -> Data {
         let request = try urlRequestFactory.makeRequest(from: endpoint)
         
         let (data, response): (Data, URLResponse)
@@ -41,8 +41,8 @@ final class NetworkService: NetworkServiceProtocol {
         return data
     }
     
-    func performRequest<T: Decodable>(for endpoint: Endpoint) async throws -> T {
-        let data = try await performRequest(for: endpoint)
+    func request<T: Decodable>(for endpoint: Endpoint) async throws -> T {
+        let data = try await requestData(for: endpoint)
         
         do {
             return try decoder.decode(T.self, from: data)
