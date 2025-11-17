@@ -11,10 +11,6 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
         static let apiKey = "API_KEY"
     }
     
-    private enum DefaultRequestParameters {
-        static let apiKey = "apikey"
-    }
-    
     private let bundle: Bundle
     
     private var infoDictionary: [String : Any]? { bundle.infoDictionary }
