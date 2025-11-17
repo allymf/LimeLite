@@ -1,8 +1,21 @@
 import Foundation
 
-enum PosterEndpoint: EndpointProtocol {
-    var url: URL? { nil }
-    var baseRoute: BaseRoute { .data }
-    var httpMethod: HTTPMethod { .get }
+struct PosterEndpoint: EndpointProtocol {
     
+    var baseRoute: BaseRoute { .image }
+    var httpMethod: HTTPMethod { .get }
+    var parameters: [String : Any] {
+        ["i": parameterValues.id]
+    }
+    
+    private let parameterValues: PosterEndpointParameters
+    
+    init(parameterValues: PosterEndpointParameters) {
+        self.parameterValues = parameterValues
+    }
+    
+}
+
+struct PosterEndpointParameters {
+    let id: String
 }
