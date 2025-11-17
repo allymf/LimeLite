@@ -1,14 +1,14 @@
 import Foundation
 
 protocol URLRequestFactoryProtocol {
-    func makeRequest(from endpoint: EndpointProtocol) throws -> URLRequest
+    func makeRequest(from endpoint: Endpoint) throws -> URLRequest
 }
 
 struct URLRequestFactory: URLRequestFactoryProtocol {
     
     private enum InfoKeys {
-        static let data = "BASE_DATA_API"
-        static let image = "BASE_IMAGE_API"
+        static let baseURL = "BASE_URL"
+        static let apiKey = "API_KEY"
     }
     
     private enum DefaultRequestParameters {
@@ -19,40 +19,36 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
     
     private var infoDictionary: [String : Any]? { bundle.infoDictionary }
     
+    private var baseURLText: String? {
+        infoDictionary?[InfoKeys.baseURL] as? String
+    }
+    
     private var apiKey: String? {
-        infoDictionary?[DefaultRequestParameters.apiKey] as? String
+        infoDictionary?[InfoKeys.apiKey] as? String
     }
     
     init(bundle: Bundle = .main) {
         self.bundle = bundle
     }
     
-    func makeRequest(from endpoint: EndpointProtocol) throws -> URLRequest {
-        guard let urlText = resolveText(for: endpoint.baseRoute),
+    func makeRequest(from endpoint: Endpoint) throws -> URLRequest {
+        guard let urlText = baseURLText,
                 let baseURL = URL(string: urlText) else {
             throw NetworkError.invalidURL
         }
         
-        var parameters = endpoint.parameters
-        parameters[DefaultRequestParameters.apiKey] = apiKey
-        
-        guard let urlWithParamteres = baseURL.appendingParameters(parameters) else {
+        guard let urlWithParamteres = baseURL.appendingParameters(endpoint.parameters) else {
             throw NetworkError.invalidURL
         }
         
         var request = URLRequest(url: urlWithParamteres)
         request.httpMethod = endpoint.httpMethod.value
+        request.setValue(
+            "Bearer \(apiKey ?? "")",
+            forHTTPHeaderField: "Authorization"
+        )
         
         return request
-    }
-    
-    private func resolveText(for route: BaseRoute) -> String? {
-        switch route {
-        case .data:
-            return infoDictionary?[InfoKeys.data] as? String
-        case .image:
-            return infoDictionary?[InfoKeys.image] as? String
-        }
     }
     
 }

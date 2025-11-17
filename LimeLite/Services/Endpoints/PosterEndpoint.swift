@@ -2,7 +2,6 @@ import Foundation
 
 struct PosterEndpoint: Endpoint {
     
-    var baseRoute: BaseRoute { .image }
     var httpMethod: HTTPMethod { .get }
     var parameters: [String : Any] {
         ["i": parameterValues.id]
