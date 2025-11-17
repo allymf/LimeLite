@@ -29,9 +29,11 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
     
     func makeRequest(from endpoint: Endpoint) throws -> URLRequest {
         guard let urlText = baseURLText,
-                let baseURL = URL(string: urlText) else {
+                var baseURL = URL(string: urlText) else {
             throw NetworkError.invalidURL
         }
+        
+        baseURL = baseURL.appending(path: endpoint.path ?? "")
         
         guard let urlWithParamteres = baseURL.appendingParameters(endpoint.parameters) else {
             throw NetworkError.invalidURL
