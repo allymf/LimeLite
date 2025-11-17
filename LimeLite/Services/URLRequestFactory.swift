@@ -8,7 +8,7 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
     
     private enum InfoKeys {
         static let baseURL = "BASE_URL"
-        static let apiKey = "API_KEY"
+        static let apiToken = "API_TOKEN"
     }
     
     private let bundle: Bundle
@@ -19,8 +19,8 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
         infoDictionary?[InfoKeys.baseURL] as? String
     }
     
-    private var apiKey: String? {
-        infoDictionary?[InfoKeys.apiKey] as? String
+    private var apiToken: String? {
+        infoDictionary?[InfoKeys.apiToken] as? String
     }
     
     init(bundle: Bundle = .main) {
@@ -40,7 +40,7 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
         var request = URLRequest(url: urlWithParamteres)
         request.httpMethod = endpoint.httpMethod.value
         request.setValue(
-            "Bearer \(apiKey ?? "")",
+            "Bearer \(apiToken ?? "")",
             forHTTPHeaderField: "Authorization"
         )
         
