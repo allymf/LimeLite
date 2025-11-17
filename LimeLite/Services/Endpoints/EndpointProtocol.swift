@@ -6,12 +6,7 @@ enum HTTPMethod: String {
     var value: String { rawValue.uppercased() }
 }
 
-enum BaseRoute {
-    case image, data
-}
-
-protocol EndpointProtocol {
-    var baseRoute: BaseRoute { get }
+protocol Endpoint {
     var httpMethod: HTTPMethod { get }
     var parameters: [String: Any] { get }
 }

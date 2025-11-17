@@ -1,8 +1,8 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-    func performRequest<T: Decodable>(for endpoint: EndpointProtocol) async throws -> T
-    func performRequest(for endpoint: EndpointProtocol) async throws -> Data
+    func performRequest<T: Decodable>(for endpoint: Endpoint) async throws -> T
+    func performRequest(for endpoint: Endpoint) async throws -> Data
 }
 
 final class NetworkService: NetworkServiceProtocol {
@@ -21,7 +21,7 @@ final class NetworkService: NetworkServiceProtocol {
         self.decoder = decoder
     }
     
-    func performRequest(for endpoint: EndpointProtocol) async throws -> Data {
+    func performRequest(for endpoint: Endpoint) async throws -> Data {
         let request = try urlRequestFactory.makeRequest(from: endpoint)
         
         let (data, response): (Data, URLResponse)
@@ -41,7 +41,7 @@ final class NetworkService: NetworkServiceProtocol {
         return data
     }
     
-    func performRequest<T: Decodable>(for endpoint: EndpointProtocol) async throws -> T {
+    func performRequest<T: Decodable>(for endpoint: Endpoint) async throws -> T {
         let data = try await performRequest(for: endpoint)
         
         do {

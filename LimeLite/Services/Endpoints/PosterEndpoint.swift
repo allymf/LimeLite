@@ -1,6 +1,6 @@
 import Foundation
 
-struct PosterEndpoint: EndpointProtocol {
+struct PosterEndpoint: Endpoint {
     
     var baseRoute: BaseRoute { .image }
     var httpMethod: HTTPMethod { .get }
