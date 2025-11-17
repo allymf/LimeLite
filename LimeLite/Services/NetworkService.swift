@@ -8,18 +8,21 @@ protocol NetworkServiceProtocol {
 final class NetworkService: NetworkServiceProtocol {
     
     private let urlSession: URLSession
+    private let urlRequestFactory: URLRequestFactoryProtocol
     private let decoder: JSONDecoder
     
     init(
         urlSession: URLSession = URLSession.shared,
+        urlRequestFactory: URLRequestFactoryProtocol,
         decoder: JSONDecoder = JSONDecoder()
     ) {
         self.urlSession = urlSession
+        self.urlRequestFactory = urlRequestFactory
         self.decoder = decoder
     }
     
     func performRequest(for endpoint: EndpointProtocol) async throws -> Data {
-        let request = try makeRequest(for: endpoint)
+        let request = try urlRequestFactory.makeRequest(from: endpoint)
         
         let (data, response): (Data, URLResponse)
         
@@ -48,14 +51,4 @@ final class NetworkService: NetworkServiceProtocol {
         }
     }
     
-    private func makeRequest(for endpoint: EndpointProtocol) throws -> URLRequest {
-        guard let url = endpoint.url else {
-            throw NetworkError.invalidURL
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = endpoint.httpMethod.value
-        
-        return request
-    }
 }

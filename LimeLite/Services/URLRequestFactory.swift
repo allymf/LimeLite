@@ -1,6 +1,8 @@
 import Foundation
 
-protocol URLRequestFactoryProtocol {}
+protocol URLRequestFactoryProtocol {
+    func makeRequest(from endpoint: EndpointProtocol) throws -> URLRequest
+}
 
 struct URLRequestFactory: URLRequestFactoryProtocol {
     
@@ -25,20 +27,23 @@ struct URLRequestFactory: URLRequestFactoryProtocol {
         self.bundle = bundle
     }
     
-    func makeRequest(from endpoint: EndpointProtocol) -> URLRequest? {
+    func makeRequest(from endpoint: EndpointProtocol) throws -> URLRequest {
         guard let urlText = resolveText(for: endpoint.baseRoute),
                 let baseURL = URL(string: urlText) else {
-            return nil
+            throw NetworkError.invalidURL
         }
         
         var parameters = endpoint.parameters
         parameters[DefaultRequestParameters.apiKey] = apiKey
         
         guard let urlWithParamteres = baseURL.appendingParameters(parameters) else {
-            return nil
+            throw NetworkError.invalidURL
         }
         
-        return URLRequest(url: urlWithParamteres)
+        var request = URLRequest(url: urlWithParamteres)
+        request.httpMethod = endpoint.httpMethod.value
+        
+        return request
     }
     
     private func resolveText(for route: BaseRoute) -> String? {
