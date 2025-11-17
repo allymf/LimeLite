@@ -5,13 +5,6 @@ struct Movie: Decodable, Identifiable {
         case title
     }
     
-    let id: UUID
+    let id: UUID = UUID()
     let title: String
-    
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        
-        id = UUID()
-        title = try container.decode(String.self, forKey: .title)
-    }
 }
