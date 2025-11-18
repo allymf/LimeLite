@@ -1,22 +1,18 @@
 import Foundation
 
-struct PosterEndpoint: Endpoint {
-    var path: String? { nil }
+enum PosterEndpoint: Endpoint {
     
-    
+    var path: String? {
+        switch self {
+        case .poster(let path):
+            return path
+        }
+    }
     var httpMethod: HTTPMethod { .get }
-    var parameters: [String : Any] {
-        ["i": parameterValues.id]
-    }
+    var baseRoute: BaseRoute { .image }
+    var parameters: [String : Any] { [:] }
     
-    private let parameterValues: PosterEndpointParameters
-    
-    init(parameterValues: PosterEndpointParameters) {
-        self.parameterValues = parameterValues
-    }
+    case poster(path: String)
     
 }
 
-struct PosterEndpointParameters {
-    let id: String
-}
