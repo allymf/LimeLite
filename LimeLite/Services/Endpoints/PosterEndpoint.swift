@@ -5,7 +5,7 @@ enum PosterEndpoint: Endpoint {
     var path: String? {
         switch self {
         case .poster(let path):
-            return path
+            return "w300/" + path
         }
     }
     var httpMethod: HTTPMethod { .get }

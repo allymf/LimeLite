@@ -4,7 +4,7 @@ struct MovieCardView: View {
     
     private let service = NetworkService()
     
-    @State private var posterImage = Image(uiImage: .actions)
+    @State private var posterImage: UIImage?
     let movie: Movie
     
     init(movie: Movie) {
@@ -13,9 +13,18 @@ struct MovieCardView: View {
     
     var body: some View {
         VStack {
-            posterImage
+            
+            let image = posterImage ?? .actions
+            
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+            
+            Spacer()
             Text(movie.title)
+                .lineLimit(1)
         }
+        .frame(width: 110, height: 170)
         .task {
             await getImage()
         }
@@ -25,7 +34,7 @@ struct MovieCardView: View {
         do {
             let imageData = try await service.requestData(for: PosterEndpoint.poster(path: movie.posterPath))
             
-            posterImage = Image(uiImage: UIImage(data: imageData) ?? .init())
+            posterImage = UIImage(data: imageData)
         } catch {
             print(error.localizedDescription)
         }

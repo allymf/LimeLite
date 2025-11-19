@@ -8,26 +8,35 @@ struct ContentView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     
+    private let columns = [
+        GridItem(.flexible(minimum: 100, maximum: 200)),
+        GridItem(.flexible(minimum: 100, maximum: 200)),
+        GridItem(.flexible(minimum: 100, maximum: 200))
+    ]
+    
     var body: some View {
         NavigationView {
-            List {
-                if let errorMessage {
-                    Text("error: \(errorMessage)")
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 20) {
+                    if let errorMessage {
+                        Text("error: \(errorMessage)")
+                    }
+                    
+                    ForEach(response.results) { movie in
+                        MovieCardView(movie: movie)
+                    }
+                    
                 }
-                
-                ForEach(response.results) { movie in
-                    Text("Movie: \(movie.title)")
+                .padding(16)
+                .navigationTitle("Discover")
+                .overlay {
+                    if isLoading {
+                        ProgressView("Fetching Data...")
+                    }
                 }
-                
-            }
-            .navigationTitle("Discover")
-            .overlay {
-                if isLoading {
-                    ProgressView("Fetching Data...")
+                .task {
+                    await doRequest()
                 }
-            }
-            .task {
-                await doRequest()
             }
         }
     }
