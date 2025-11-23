@@ -14,11 +14,13 @@ struct MovieCardView: View {
     var body: some View {
         VStack {
             
-            let image = posterImage ?? .actions
-            
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+            if let posterImage {
+                Image(uiImage: posterImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            } else {
+                ProgressView()
+            }
             
             Spacer()
             Text(movie.title)
