@@ -4,7 +4,7 @@ import SwiftUI
 struct LimeLiteApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DiscoverMoviesView()
         }
     }
 }

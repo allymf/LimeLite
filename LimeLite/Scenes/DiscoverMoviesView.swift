@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ContentView: View {
+struct DiscoverMoviesView: View {
     
     let service = NetworkService()
     
@@ -54,5 +54,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    DiscoverMoviesView()
 }
