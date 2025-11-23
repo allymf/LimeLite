@@ -23,7 +23,7 @@ struct DiscoverMoviesView: View {
                     }
                     
                     ForEach(viewModel.response.results) { movie in
-                        MovieCardView(movie: movie)
+                        MovieCardView(viewModel: MovieCardViewModel(movie: movie))
                             .onTapGesture {
                                 viewModel.didTapMovie(movie)
                             }

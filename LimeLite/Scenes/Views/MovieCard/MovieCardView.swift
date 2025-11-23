@@ -2,43 +2,34 @@ import SwiftUI
 
 struct MovieCardView: View {
     
-    private let service = NetworkService()
-    
-    @State private var posterImage: UIImage?
-    let movie: Movie
-    
-    init(movie: Movie) {
-        self.movie = movie
-    }
+    @State var viewModel: MovieCardViewModel
     
     var body: some View {
         VStack {
             
-            if let posterImage {
+            if let posterImage = viewModel.posterImage {
                 Image(uiImage: posterImage)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             } else {
-                ProgressView()
+                Image(systemName: "photo.artframe")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
             }
             
             Spacer()
-            Text(movie.title)
+            Text(viewModel.title)
                 .lineLimit(1)
         }
         .frame(width: 110, height: 170)
+        .overlay {
+            if viewModel.isLoading {
+                ProgressView()
+            }
+        }
         .task {
-            await getImage()
+            await viewModel.fetchPosterImage()
         }
     }
     
-    private func getImage() async {
-        do {
-            let imageData = try await service.requestData(for: PosterEndpoint.poster(path: movie.posterPath))
-            
-            posterImage = UIImage(data: imageData)
-        } catch {
-            print(error.localizedDescription)
-        }
-    }
 }
