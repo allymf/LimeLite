@@ -1,6 +1,6 @@
 import Foundation
 
-struct Movie: Decodable, Identifiable {
+struct Movie: Decodable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case title, posterPath = "poster_path"
     }

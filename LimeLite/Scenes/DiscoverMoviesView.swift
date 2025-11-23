@@ -1,5 +1,9 @@
 import SwiftUI
 
+enum Destination: Hashable {
+    case movieDetails(movie: Movie)
+}
+
 struct DiscoverMoviesView: View {
     
     let service = NetworkService()
@@ -8,6 +12,8 @@ struct DiscoverMoviesView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     
+    @State private var path = [Destination]()
+    
     private let columns = [
         GridItem(.flexible(minimum: 100, maximum: 200)),
         GridItem(.flexible(minimum: 100, maximum: 200)),
@@ -15,7 +21,7 @@ struct DiscoverMoviesView: View {
     ]
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     if let errorMessage {
@@ -24,11 +30,22 @@ struct DiscoverMoviesView: View {
                     
                     ForEach(response.results) { movie in
                         MovieCardView(movie: movie)
+                            .onTapGesture {
+                                path.append(.movieDetails(movie: movie))
+                                print("Tapped movie", movie)
+                            }
                     }
                     
                 }
                 .padding(16)
                 .navigationTitle("Discover")
+                .navigationDestination(for: Destination.self) { destination in
+                    switch destination {
+                    case .movieDetails(let movie):
+                        MovieDetailsView(movie: movie)
+                    }
+                    
+                }
                 .overlay {
                     if isLoading {
                         ProgressView("Fetching Data...")
