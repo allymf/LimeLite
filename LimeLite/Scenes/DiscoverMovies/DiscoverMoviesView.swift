@@ -6,13 +6,7 @@ enum Destination: Hashable {
 
 struct DiscoverMoviesView: View {
     
-    let service = NetworkService()
-    
-    @State private var response = RecentMoviesResponse(results: [])
-    @State private var isLoading = false
-    @State private var errorMessage: String?
-    
-    @State private var path = [Destination]()
+    @State private var viewModel = DiscoverMoviesViewModel()
     
     private let columns = [
         GridItem(.flexible(minimum: 100, maximum: 200)),
@@ -21,18 +15,17 @@ struct DiscoverMoviesView: View {
     ]
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $viewModel.path) {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    if let errorMessage {
+                    if let errorMessage = viewModel.errorMessage {
                         Text("error: \(errorMessage)")
                     }
                     
-                    ForEach(response.results) { movie in
+                    ForEach(viewModel.response.results) { movie in
                         MovieCardView(movie: movie)
                             .onTapGesture {
-                                path.append(.movieDetails(movie: movie))
-                                print("Tapped movie", movie)
+                                viewModel.didTapMovie(movie)
                             }
                     }
                     
@@ -47,25 +40,15 @@ struct DiscoverMoviesView: View {
                     
                 }
                 .overlay {
-                    if isLoading {
+                    if viewModel.isLoading {
                         ProgressView("Fetching Data...")
                     }
                 }
                 .task {
-                    await doRequest()
+                    await viewModel.fetchMovies()
                 }
             }
         }
-    }
-    
-    func doRequest() async {
-        isLoading = true
-        do {
-            response = try await service.request(for: MoviesEndpoint.recentMovies)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        isLoading = false
     }
     
 }
