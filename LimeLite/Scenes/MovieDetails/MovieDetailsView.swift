@@ -2,14 +2,18 @@ import SwiftUI
 
 struct MovieDetailsView: View {
     
-    let movie: Movie
+    private let viewModel: MovieDetailsViewModel
+    
+    init(viewModel: MovieDetailsViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
-        Text(movie.title)
-            .navigationTitle(movie.title)
+        Text(viewModel.title)
+            .navigationTitle(viewModel.title)
     }
 }
 
 #Preview {
-    MovieDetailsView(movie: .init(title: "Movie Title", posterPath: ""))
+    MovieDetailsView(viewModel: .init(movie: .init(title: "Movie title", posterPath: "")))
 }
