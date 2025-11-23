@@ -20,6 +20,7 @@ final class ImageCacheRepository: ImageCacheRepositoryProtocol {
     }
     
     func getImage(fromKey key: String) -> UIImage? {
+        debugPrint("Retrieved cached image for key: ", key)
         return imageCache.object(forKey: key as NSString)
     }
     

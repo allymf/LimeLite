@@ -48,6 +48,9 @@ struct DiscoverMoviesView: View {
                     await viewModel.fetchMovies()
                 }
             }
+            .refreshable {
+                await viewModel.fetchMovies()
+            }
         }
     }
     
