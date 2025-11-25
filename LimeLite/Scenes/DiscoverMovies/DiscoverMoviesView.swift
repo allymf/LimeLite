@@ -6,7 +6,11 @@ enum Destination: Hashable {
 
 struct DiscoverMoviesView: View {
     
-    @State private var viewModel = DiscoverMoviesViewModel()
+    @State private var viewModel: DiscoverMoviesViewModeling
+    
+    init(viewModel: DiscoverMoviesViewModeling) {
+        self.viewModel = viewModel
+    }
     
     private let columns = [
         GridItem(.flexible(minimum: 100, maximum: 200)),
@@ -56,6 +60,27 @@ struct DiscoverMoviesView: View {
     
 }
 
+#if DEBUG
+struct MockDiscoverMoviesViewModel: DiscoverMoviesViewModeling {
+    var response = RecentMoviesResponse(results: [])
+    var isLoading: Bool = false
+    var errorMessage: String?
+    
+    var path = [Destination]()
+    
+    func fetchMovies() async {}
+    func didTapMovie(_ movie: Movie) {}
+}
+#endif
+
 #Preview {
-    DiscoverMoviesView()
+    
+    @Previewable @State var mockViewModel = MockDiscoverMoviesViewModel(
+        response: .init(results: []),
+        isLoading: false,
+        errorMessage: nil,
+        path: []
+    )
+    
+    DiscoverMoviesView(viewModel: mockViewModel)
 }

@@ -1,7 +1,17 @@
 import SwiftUI
 
+protocol DiscoverMoviesViewModeling: Observable {
+    var response: RecentMoviesResponse { get }
+    var isLoading: Bool { get }
+    var errorMessage: String? { get }
+    var path: [Destination] { get set }
+    
+    func fetchMovies() async
+    func didTapMovie(_ movie: Movie)
+}
+
 @Observable
-final class DiscoverMoviesViewModel {
+final class DiscoverMoviesViewModel: DiscoverMoviesViewModeling {
     
     private let service: NetworkServiceProtocol
     
