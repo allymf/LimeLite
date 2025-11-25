@@ -35,7 +35,7 @@ struct DiscoverMoviesView: View {
                 .navigationDestination(for: Destination.self) { destination in
                     switch destination {
                     case .movieDetails(let movie):
-                        MovieDetailsView(movie: movie)
+                        MovieDetailsView(viewModel: MovieDetailsViewModel(movie: movie))
                     }
                     
                 }

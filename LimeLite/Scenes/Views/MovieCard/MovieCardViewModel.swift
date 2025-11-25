@@ -1,8 +1,16 @@
 import SwiftUI
 import UIKit
 
+protocol MovieCardViewModeling: Observable {
+    var title: String { get }
+    var posterImage: UIImage? { get }
+    var isLoading: Bool { get }
+    
+    func fetchPosterImage() async
+}
+
 @Observable
-final class MovieCardViewModel {
+final class MovieCardViewModel: MovieCardViewModeling {
     
     private let posterRepository: PosterRespositoryProtocol
     private let movie: Movie

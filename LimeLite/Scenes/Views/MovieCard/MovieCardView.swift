@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MovieCardView: View {
     
-    @State var viewModel: MovieCardViewModel
+    @State var viewModel: MovieCardViewModeling
     
     var body: some View {
         VStack {
@@ -32,4 +32,24 @@ struct MovieCardView: View {
         }
     }
     
+}
+
+#if DEBUG
+    struct PreviewMovieCardViewModel: MovieCardViewModeling {
+        let title: String
+        var posterImage: UIImage?
+        var isLoading: Bool
+        
+        func fetchPosterImage() async {}
+    }
+#endif
+
+#Preview {
+    @Previewable @State var viewModel = PreviewMovieCardViewModel(
+        title: "1234",
+        posterImage: .init(),
+        isLoading: false
+    )
+    
+    MovieCardView(viewModel: viewModel)
 }
