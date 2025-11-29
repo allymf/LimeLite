@@ -4,7 +4,12 @@ enum MoviesEndpoint: Endpoint {
     var baseRoute: BaseRoute { .data }
     
     var path: String? {
-        "movie/now_playing"
+        switch self {
+        case .recentMovies:
+            return "movie/now_playing"
+        case .details(let id):
+            return "movie/\(id)"
+        }
     }
     
     var parameters: [String : Any] {
@@ -12,5 +17,6 @@ enum MoviesEndpoint: Endpoint {
     }
     
     case recentMovies
+    case details(id: String)
     
 }
